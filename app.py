@@ -40,19 +40,25 @@ if st.button("Predict"):
 
     fig, ax = plt.subplots()
 
-    ax.barh(["Risk"], [probability * 100])
-    ax.set_xlim(0, 100)
+    risk_value = probability * 100
 
     if probability > 0.7:
         color = "red"
+        label = "High Risk"
     elif probability > 0.4:
         color = "orange"
+        label = "Medium Risk"
     else:
         color = "green"
+        label = "Low Risk"
 
-    ax.barh(["Risk"], [probability * 100], color=color)
+    ax.barh(["Churn Risk"], [risk_value], color=color)
 
+    ax.set_xlim(0, 100)
     ax.set_xlabel("Probability (%)")
-    ax.set_title("Churn Probability")
+    ax.set_title(f"Churn Probability - {label}")
+
+    # value show on bar
+    ax.text(risk_value + 1, 0, f"{risk_value:.2f}%", va='center')
 
     st.pyplot(fig)
