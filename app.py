@@ -1,5 +1,6 @@
 import streamlit as st
 import time
+import matplotlib.pyplot as plt
 from src.predict import predict_churn
 
 st.title("Customer Churn Prediction")
@@ -13,17 +14,43 @@ if st.button("Predict"):
     st.subheader("Processing...")
 
     progress_bar = st.progress(0)
+    status_text = st.empty()
 
     
     for i in range(100):
         time.sleep(0.01)  
         progress_bar.progress(i + 1)
+        status_text.text(f"Analyzing customer... {i+1}%")
+    
+    prediction, probability = predict_churn(recency, frequency, monetary)
+    progress_bar.empty()
+    status_text.empty()
 
-    result = predict_churn(recency, frequency, monetary)
 
     st.success("Prediction Completed!")
 
-    if result == 1:
-        st.error("Customer will CHURN ")
+    if prediction == 1:
+        st.error(f"Customer will CHURN ({probability*100:.2f}%) ")
     else:
-        st.success("Customer will RETAIN ")
+        st.success(f"Customer will RETAIN ({(1-probability)*100:.2f}%) ")
+
+    st.subheader("Churn Risk Score")
+
+    fig, ax = plt.subplots()
+
+    ax.barh(["Risk"], [probability * 100])
+    ax.set_xlim(0, 100)
+
+    if probability > 0.7:
+        color = "red"
+    elif probability > 0.4:
+        color = "orange"
+    else:
+        color = "green"
+
+    ax.barh(["Risk"], [probability * 100], color=color)
+
+    ax.set_xlabel("Probability (%)")
+    ax.set_title("Churn Probability")
+
+    st.pyplot(fig)
