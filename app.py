@@ -3,7 +3,9 @@ import time
 import matplotlib.pyplot as plt
 from src.predict import predict_churn
 
+st.set_page_config(page_title="Churn Predictor", layout="centered")
 st.title("Customer Churn Prediction")
+st.markdown("Enter Customer Details")
 
 recency = st.number_input("Recency (days)", min_value=0, step=1)
 frequency = st.number_input("Frequency (orders)", min_value=0, step=1)
@@ -18,7 +20,7 @@ if st.button("Predict"):
 
     
     for i in range(100):
-        time.sleep(0.01)  
+        time.sleep(0.03)  
         progress_bar.progress(i + 1)
         status_text.text(f"Analyzing customer... {i+1}%")
     

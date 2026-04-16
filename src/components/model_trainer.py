@@ -3,6 +3,8 @@ import os
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
+from src.logger import logging
+from src.config import MODEL_PATH
 
 def train_model(df):
 
@@ -17,10 +19,13 @@ def train_model(df):
     model.fit(X_train, y_train)
 
     y_pred = model.predict(X_test)
-
+     
+    logging.info("Model training completed")
     print(classification_report(y_test, y_pred))
 
     os.makedirs("models", exist_ok=True)
-    joblib.dump(model, "models/churn_model.pkl")
+    joblib.dump(model, MODEL_PATH)
+    
+    logging.info("Model saved successfully")
 
     return model
